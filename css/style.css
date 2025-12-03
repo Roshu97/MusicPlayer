@@ -710,3 +710,204 @@ button:disabled {
     opacity: 0.5;
     cursor: not-allowed;
 }
+
+/* ===========================
+   Spotify Integration Styles
+   =========================== */
+
+.spotify-search-container {
+    width: 100%;
+    max-width: 500px;
+    margin: 20px 0;
+    padding: 15px;
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    box-shadow: var(--shadow-sm);
+}
+
+.search-box {
+    display: flex;
+    gap: 10px;
+}
+
+.search-input {
+    flex: 1;
+    padding: 10px 15px;
+    background: var(--darker-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 20px;
+    color: var(--text-primary);
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    background: rgba(29, 185, 84, 0.1);
+}
+
+.search-input::placeholder {
+    color: var(--text-secondary);
+}
+
+.search-btn {
+    padding: 10px 20px;
+    background: var(--primary-color);
+    border: none;
+    border-radius: 20px;
+    color: white;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.search-btn:hover {
+    background: var(--secondary-color);
+    transform: scale(1.05);
+}
+
+.search-btn:active {
+    transform: scale(0.98);
+}
+
+.spotify-results {
+    margin-top: 15px;
+    max-height: 400px;
+    overflow-y: auto;
+    border-top: 1px solid var(--border-color);
+    padding-top: 15px;
+}
+
+.spotify-results h3 {
+    font-size: 14px;
+    color: var(--text-secondary);
+    margin-bottom: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.results-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.result-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.result-item:hover {
+    background: rgba(29, 185, 84, 0.2);
+    transform: translateX(5px);
+}
+
+.result-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex: 1;
+    min-width: 0;
+}
+
+.result-cover {
+    width: 50px;
+    height: 50px;
+    border-radius: 4px;
+    object-fit: cover;
+    background: var(--darker-bg);
+}
+
+.result-text {
+    flex: 1;
+    min-width: 0;
+    font-size: 12px;
+}
+
+.result-text strong {
+    display: block;
+    color: var(--text-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 13px;
+}
+
+.result-text span {
+    color: var(--text-secondary);
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.result-text small {
+    color: #888;
+    font-size: 11px;
+    display: block;
+}
+
+.add-track-btn {
+    padding: 8px 12px;
+    background: var(--primary-color);
+    border: none;
+    border-radius: 50%;
+    color: white;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    flex-shrink: 0;
+    width: 40px;
+    height: 40px;
+}
+
+.add-track-btn:hover {
+    background: var(--secondary-color);
+    transform: scale(1.1);
+}
+
+.add-track-btn:active {
+    transform: scale(0.95);
+}
+
+/* Responsive adjustments for Spotify search */
+@media (max-width: 768px) {
+    .spotify-search-container {
+        max-width: 100%;
+        padding: 12px;
+    }
+    
+    .search-box {
+        flex-direction: column;
+    }
+    
+    .search-input,
+    .search-btn {
+        width: 100%;
+    }
+    
+    .result-item {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .result-info {
+        flex-direction: column;
+        width: 100%;
+    }
+    
+    .add-track-btn {
+        width: 100%;
+        border-radius: 4px;
+    }
+}

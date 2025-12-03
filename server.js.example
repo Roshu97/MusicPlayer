@@ -1,0 +1,231 @@
+// ==========================================
+// SPOTIFY API - SECURE BACKEND EXAMPLE
+// DO NOT EXPOSE THIS IN FRONTEND!
+// ==========================================
+
+// File: server.js
+// Install: npm install express axios cors dotenv
+
+require('dotenv').config();
+const express = require('express');
+const axios = require('axios');
+const cors = require('cors');
+
+const app = express();
+app.use(cors());
+app.use(express.json());
+app.use(express.static('.')); // Serve static files
+
+// ✅ CREDENTIALS STORED SECURELY IN .env
+const CLIENT_ID = process.env.SPOTIFY_CLIENT_ID;
+const CLIENT_SECRET = process.env.SPOTIFY_CLIENT_SECRET;
+
+if (!CLIENT_ID || !CLIENT_SECRET) {
+    console.error('ERROR: Missing Spotify credentials in .env');
+    process.exit(1);
+}
+
+// ==========================================
+// GET SPOTIFY ACCESS TOKEN (BACKEND ONLY)
+// ==========================================
+async function getSpotifyToken() {
+    const auth = Buffer.from(
+        `${CLIENT_ID}:${CLIENT_SECRET}`
+    ).toString('base64');
+
+    try {
+        const response = await axios.post(
+            'https://accounts.spotify.com/api/token',
+            'grant_type=client_credentials',
+            {
+                headers: {
+                    'Authorization': `Basic ${auth}`,
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                }
+            }
+        );
+        return response.data.access_token;
+    } catch (error) {
+        console.error('Spotify auth error:', error.message);
+        throw new Error('Failed to get Spotify access token');
+    }
+}
+
+// ==========================================
+// SEARCH SPOTIFY (SAFE ENDPOINT)
+// ==========================================
+app.get('/api/search/:query', async (req, res) => {
+    try {
+        const query = req.params.query;
+        
+        if (!query || query.length < 2) {
+            return res.status(400).json({ 
+                error: 'Search query must be at least 2 characters' 
+            });
+        }
+
+        // Get token securely on backend
+        const token = await getSpotifyToken();
+
+        // Call Spotify API
+        const response = await axios.get(
+            'https://api.spotify.com/v1/search',
+            {
+                params: {
+                    q: query,
+                    type: 'track',
+                    limit: 10
+                },
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            }
+        );
+
+        // Extract only necessary data (safe)
+        const tracks = response.data.tracks.items.map(track => ({
+            title: track.name,
+            artist: track.artists.map(a => a.name).join(', '),
+            album: track.album.name,
+            preview: track.preview_url,  // 30-second preview URL
+            cover: track.album.images[0]?.url || null,
+            spotifyId: track.id,
+            duration: Math.floor(track.duration_ms / 1000)
+        }));
+
+        res.json(tracks);
+    } catch (error) {
+        console.error('Search error:', error.message);
+        res.status(500).json({ error: 'Search failed' });
+    }
+});
+
+// ==========================================
+// GET TOP TRACKS (SAFE ENDPOINT)
+// ==========================================
+app.get('/api/top-tracks', async (req, res) => {
+    try {
+        const token = await getSpotifyToken();
+
+        const response = await axios.get(
+            'https://api.spotify.com/v1/browse/new-releases',
+            {
+                params: {
+                    limit: 20,
+                    country: 'US'
+                },
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            }
+        );
+
+        const tracks = response.data.albums.items.map(album => ({
+            title: album.name,
+            artist: album.artists.map(a => a.name).join(', '),
+            album: album.name,
+            cover: album.images[0]?.url || null,
+            spotifyId: album.id,
+            releaseDate: album.release_date
+        }));
+
+        res.json(tracks);
+    } catch (error) {
+        console.error('Top tracks error:', error.message);
+        res.status(500).json({ error: 'Failed to fetch top tracks' });
+    }
+});
+
+// ==========================================
+// FEATURED PLAYLISTS (SAFE ENDPOINT)
+// ==========================================
+app.get('/api/playlists', async (req, res) => {
+    try {
+        const token = await getSpotifyToken();
+
+        const response = await axios.get(
+            'https://api.spotify.com/v1/browse/featured-playlists',
+            {
+                params: {
+                    limit: 10,
+                    country: 'US'
+                },
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            }
+        );
+
+        const playlists = response.data.playlists.items.map(playlist => ({
+            title: playlist.name,
+            description: playlist.description,
+            cover: playlist.images[0]?.url || null,
+            spotifyId: playlist.id,
+            tracks: playlist.tracks.total
+        }));
+
+        res.json(playlists);
+    } catch (error) {
+        console.error('Playlists error:', error.message);
+        res.status(500).json({ error: 'Failed to fetch playlists' });
+    }
+});
+
+// ==========================================
+// ERROR HANDLING
+// ==========================================
+app.use((err, req, res, next) => {
+    console.error('Error:', err.message);
+    res.status(500).json({ error: 'Internal server error' });
+});
+
+// ==========================================
+// START SERVER
+// ==========================================
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+    console.log(`
+    ✅ Server running on http://localhost:${PORT}
+    
+    API Endpoints:
+    - /api/search/:query        Search for tracks
+    - /api/top-tracks           Get featured tracks
+    - /api/playlists            Get featured playlists
+    
+    Remember: Never expose tokens in frontend!
+    `);
+});
+
+// ==========================================
+// ENVIRONMENT VARIABLES (.env file)
+// ==========================================
+/*
+SPOTIFY_CLIENT_ID=your_client_id_here
+SPOTIFY_CLIENT_SECRET=your_client_secret_here
+PORT=3000
+*/
+
+// ==========================================
+// package.json DEPENDENCIES
+// ==========================================
+/*
+{
+  "name": "music-player-backend",
+  "version": "1.0.0",
+  "description": "Secure Spotify API backend",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "axios": "^1.4.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.22"
+  }
+}
+*/
