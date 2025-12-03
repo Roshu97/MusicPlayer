@@ -84,48 +84,49 @@ class MusicPlayer {
     }
 
     /**
-     * Load default playlist with sample songs
+     * Load default playlist with free music from online sources
+     * All songs are from Creative Commons/Free Music sources
      */
     loadDefaultPlaylist() {
         this.playlist = [
             {
-                title: 'Summer Vibes',
-                artist: 'The Sunset Band',
-                album: 'Tropical Nights',
-                duration: 240,
-                src: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3',
+                title: 'Sunny',
+                artist: 'Bensound',
+                album: 'Royalty Free Music',
+                duration: 264,
+                src: 'https://www.bensound.com/bensound-music/bensound-sunny.mp3',
                 cover: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=300&h=300&fit=crop'
             },
             {
-                title: 'Midnight Echo',
-                artist: 'Luna Waves',
-                album: 'Neon Dreams',
-                duration: 200,
-                src: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3',
+                title: 'Ukulele',
+                artist: 'Bensound',
+                album: 'Royalty Free Music',
+                duration: 128,
+                src: 'https://www.bensound.com/bensound-music/bensound-ukulele.mp3',
                 cover: 'https://images.unsplash.com/photo-1459749411175-04bf5292ceea?w=300&h=300&fit=crop'
             },
             {
-                title: 'Electric Soul',
-                artist: 'Cosmic Pulse',
-                album: 'Digital Horizons',
-                duration: 220,
-                src: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3',
+                title: 'Ambient',
+                artist: 'Bensound',
+                album: 'Royalty Free Music',
+                duration: 146,
+                src: 'https://www.bensound.com/bensound-music/bensound-ambient.mp3',
                 cover: 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=300&h=300&fit=crop'
             },
             {
-                title: 'Ocean Breeze',
-                artist: 'Tidal Waves',
-                album: 'Water Colors',
-                duration: 210,
-                src: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3',
+                title: 'Electronica',
+                artist: 'Bensound',
+                album: 'Royalty Free Music',
+                duration: 182,
+                src: 'https://www.bensound.com/bensound-music/bensound-electronica.mp3',
                 cover: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=300&h=300&fit=crop'
             },
             {
-                title: 'Starlight',
-                artist: 'Galaxy Walkers',
-                album: 'Cosmic Journey',
-                duration: 230,
-                src: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3',
+                title: 'Happiness',
+                artist: 'Bensound',
+                album: 'Royalty Free Music',
+                duration: 138,
+                src: 'https://www.bensound.com/bensound-music/bensound-happiness.mp3',
                 cover: 'https://images.unsplash.com/photo-1487180144351-b8472da7d491?w=300&h=300&fit=crop'
             }
         ];
